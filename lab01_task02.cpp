@@ -9,6 +9,7 @@ void thread_func1()
 {
 	mutex.lock(); 
 	x.push_back(0); 
+	mutex.unlock();
 }
 
 void thread_func2()
