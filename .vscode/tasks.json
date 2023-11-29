@@ -4,7 +4,7 @@
         {
             "label": "Build Main",
             "type": "shell",
-            "command": "g++ -g ${file} -o ${workspaceFolder}/bin/${fileBasenameNoExtension}.out",
+            "command": "g++ -g -pthread -fopenmp ${file} -o ${workspaceFolder}/bin/${fileBasenameNoExtension}.out",
             "group": {
                 "kind": "build",
                 "isDefault": true

@@ -1,32 +1,30 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <iostream>
 #include <thread>
 
 using namespace std;
 
-int x = 10;
-int y = 20;
+int globalVariable = 0;
 
-void th_1(void)
-{
-	x = y - 10;
-	cout << x << endl;
-	return;
+void increase() {
+    while (globalVariable < 1000) {
+        globalVariable++;
+    }
 }
 
-void th_2(void)
-{
-	y = x + 50;
-	cout << y << endl;
-	return;
+void decrease() {
+    while (globalVariable > -1000) {
+        globalVariable--;
+    }
 }
 
-int main()
-{
-	std::thread th1(th_1);
-	std::thread th2(th_2);
-	th1.join(); 
-	th2.join();
-	return 0;
+int main() {
+    thread thread1(increase);
+    thread thread2(decrease);
+    
+    thread1.join();
+    thread2.join();
+    
+    cout << "Final value: " << globalVariable << endl;
+    
+    return 0;
 }

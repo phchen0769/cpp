@@ -1,31 +1,43 @@
-#include <vector> 
-#include <mutex> 
+#include <iostream>
+#include <list>
 #include <thread>
+#include <mutex>
+#include <random>
 
-std::vector<int> x; 
-std::mutex mutex;
+using namespace std;
 
-void thread_func1() 
-{
-	mutex.lock(); 
-	x.push_back(0); 
-	mutex.unlock();
+list<int> myList;
+mutex mtx;
+
+void appendRandomValue() {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> dis(1, 100);
+
+    while (myList.size() < 10) {
+        int randomValue = dis(gen);
+
+        lock_guard<mutex> lock(mtx);
+        myList.push_back(randomValue);
+    }
 }
 
-void thread_func2()
-{
-	mutex.lock();
-	x.pop_back();
-	mutex.unlock();
+void printListContents() {
+    while (myList.size() < 10) {
+        lock_guard<mutex> lock(mtx);
+        for (const auto& value : myList) {
+            cout << value << " ";
+        }
+        cout << endl;
+    }
 }
 
-int main() 
-{
-	std::thread th1(thread_func1); 
-	std::thread th2(thread_func2);
-
-	th1.join();
-	th2.join();
-
-	return 0;
+int main() {
+    thread thread1(appendRandomValue);
+    thread thread2(printListContents);
+    
+    thread1.join();
+    thread2.join();
+    
+    return 0;
 }
